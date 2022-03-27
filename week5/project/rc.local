@@ -1,0 +1,20 @@
+#路径：etc/rc.local   ,作用：系统启动时的脚本文件，让后台服务程序在开机启动时运行
+#!/bin/bash
+# THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES
+#
+# It is highly advisable to create own systemd services or udev rules
+# to run scripts during boot instead of using this file.
+#
+# In contrast to previous versions due to parallel execution during boot
+# this script will NOT be run after all other services.
+#
+# Please note that you must run 'chmod +x /etc/rc.d/rc.local' to ensure
+# that this script will be executed during boot.
+
+touch / var / lock / subsys / local(超级用户)
+#检查服务程序是否超时(启动守护程序)
+#/weather/project/tools1/bin/procctl 30 /weather/project/tools1/bin/checkproc
+
+#启动数据中心的后台服务程序(超级用户)
+#(超级用户)/bin/sh /weather/project/idc1/c/start.sh
+#切换到有权限的普通用户执行 su - root - c “ / bin / sh / weather / project / idc1 / c / start.sh”
