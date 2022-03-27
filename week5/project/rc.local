@@ -17,4 +17,4 @@ touch / var / lock / subsys / local(超级用户)
 
 #启动数据中心的后台服务程序(超级用户)
 #(超级用户)/bin/sh /weather/project/idc1/c/start.sh
-#切换到有权限的普通用户执行 su - root - c “ / bin / sh / weather / project / idc1 / c / start.sh”
+#切换到有权限的普通用户执行 su - msh - c “ / bin / sh / weather / project / idc1 / c / start.sh”
