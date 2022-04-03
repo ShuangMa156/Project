@@ -1,0 +1,46 @@
+第三章基于ftp协议的文件传输系统
+一、ftp基础知识
+ftp协议的优点：简单、创建ftp服务容易、适用于内部网络环境
+1、ftp协议的基本概念
+2、在CentOS7中安装和配置ftp服务
+3、掌握ftp的常用命令
+二、ftp客户端的封装
+1、寻找开元的ftplib库，封装成C++的Cftp类
+2、掌握Cftp类的使用方法
+（1）调用开源库编写程序时运行报错
+错误报告：./ftpclient: error while loading shared libraries: libftp.so: cannot open shared object file: No such file or directory
+
+解决方法：运行编译后的程序报错 error while loading shared libraries: lib*.so: cannot open shared object file: No such file or directory - 架构师李肯 - 博客园 (cnblogs.com)
+编译命令：g++ -g -o ftpclient ftpclient.cpp /weather/project/public/_ftp.cpp /weather/project/public/_public.cpp -I/weather/project/public -L/weather/project/public -lftp -lm -lc -Wl,-rpath="/weather/project/public"
+
+（2）ftp服务器登录失败
+错误报告：
+Job for vsftpd.service failed because the control process exited with error code. See "systemctl status vsftpd.service" and "journalctl -xe" for details.
+● vsftpd.service - Vsftpd ftp daemon
+   Loaded: loaded (/usr/lib/systemd/system/vsftpd.service; enabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since 日 2022-04-03 16:14:27 CST; 16s ago
+  Process: 5273 ExecStart=/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf (code=exited, status=2)
+
+4月 03 16:14:27 localhost.localdomain systemd[1]: Starting Vsftpd ftp daemon...
+4月 03 16:14:27 localhost.localdomain vsftpd[5273]: 500 OOPS: unrecognised variabl...e
+4月 03 16:14:27 localhost.localdomain systemd[1]: vsftpd.service: control process ...2
+4月 03 16:14:27 localhost.localdomain systemd[1]: Failed to start Vsftpd ftp daemon.
+4月 03 16:14:27 localhost.localdomain systemd[1]: Unit vsftpd.service entered fail....
+4月 03 16:14:27 localhost.localdomain systemd[1]: vsftpd.service failed.
+Hint: Some lines were ellipsized, use -l to show in full.
+
+错误原因：ftp服务的配置文件 /etc/vsftpd/vsftpd.conf 中的配置中等号两边的参数与等号之间存在空格
+解决方法:查找所有设置参数，逐一排查
+
+三、文件下载功能的实现（文件的下载是数据采集子系统的一个模块）
+1、开发通用的文件下载模块，从ftp服务器下载文件
+（1）文件下载的实现
+①采用xml作为程序的参数
+②解析xml的GetXMLBuffer函数族
+（2）实际项目开发中的文件按下载需求
+①增量下载文件，每次只下载新增和修改过的文件-----适用于ftp服务器为多个客户端提供服务
+②下载文件后，删除ftp服务器上的文件-----适用于ftp服务器只为一个客户端提供服务
+③下载文件后，把ftp服务器上的文件移动到备份目录-----适用于ftp服务器只为一个客户端提供服务
+
+四、文件上传功能的实现（文件的上传是数据分发和数据交换子系统的模块）
+1、开发通用的文件上传模块，把文件上传到ftp服务器
